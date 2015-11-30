@@ -1,0 +1,17 @@
+rabbitmq:
+  image: rabbitmq:3-management
+  ports:
+  - "8080:15672"
+  - "5672:5672"
+sender1:
+  build: senders/sender1/.
+  ports:
+    - 8081:8888
+sender2:
+  build: senders/sender2/.
+  ports:
+    - 8082:8888
+receiver:
+  build: receiver/.
+  ports:
+    - 8083:8888
