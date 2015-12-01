@@ -3,10 +3,14 @@ rabbitmq:
   ports:
   - "8080:15672"
   - "5672:5672"
+mongodb:
+  image: mongo
+  ports:
+  - "27017:27017"
 sender1:
   build: senders/sender1/.
   ports:
-    - 8081:8888
+    - 8081:3000
 sender2:
   build: senders/sender2/.
   ports:
