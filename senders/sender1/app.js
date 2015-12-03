@@ -1,22 +1,48 @@
-var express = require('express'),
-  config = require('./config/config'),
-  glob = require('glob'),
-  mongoose = require('mongoose');
-
-mongoose.connect(config.db);
-var db = mongoose.connection;
-db.on('error', function () {
-  throw new Error('unable to connect to database at ' + config.db);
-});
-
-var models = glob.sync(config.root + '/app/models/*.js');
-models.forEach(function (model) {
-  require(model);
-});
+var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
 
-require('./config/express')(app, config);
+app.get('/', function (req, res) {
+    res.send('Hello World!');
+});
 
-app.listen(config.port, function () {
-  console.log('Express server listening on port ' + config.port);
+var amqp = require('amqplib/callback_api');
+var mqhost = 'amqp://rabbitmqtest_rabbitmq_1';
+// First connect
+amqp.connect(mqhost, function(err, conn) {
+    console.log('connected to amqp at ' + mqhost);
+});
+// Then create channel
+amqp.connect(mqhost, function(err, conn) {
+    conn.createChannel(function(err, ch) {});
+});
+var q = 'hello';
+// Create channel and queue
+amqp.connect(mqhost, function(err, conn) {
+    conn.createChannel(function(err, ch) {
+        ch.assertQueue(q, {durable: false});
+        console.log(" queue created " + q);
+    });
+});
+
+// parse application/json
+app.use(bodyParser.json());
+
+app.post('/', function(req, res){
+    var messageToSend = JSON.stringify(req.body, null, 2);
+    console.log(" [x] received " + messageToSend);
+    amqp.connect(mqhost, function(err, conn) {
+        conn.createChannel(function(err, ch) {
+            ch.sendToQueue(q, new Buffer(messageToSend));
+            console.log(" [x] Sent " + messageToSend);
+        });
+    });
+    res.sendStatus(201);
+});
+
+var server = app.listen(3000, function () {
+    var host = server.address().address;
+    var port = server.address().port;
+
+    console.log('Example app listening at http://%s:%s', host, port);
 });

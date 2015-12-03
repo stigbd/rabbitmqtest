@@ -4,7 +4,7 @@ all: build run
 
 build:
 	@echo "Building"
-	docker build -t sender1 .
+	docker build --rm=true --force-rm=true -t sender1 .
 
 test:
 	@echo "Testing"

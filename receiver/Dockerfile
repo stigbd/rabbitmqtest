@@ -1,3 +1,13 @@
-FROM node:4-onbuild
+FROM node:latest
 # replace this with your application's default port
-EXPOSE 8888
+EXPOSE 3000 35729
+
+# Install app dependencies npm
+COPY package.json /src/package.json
+RUN cd /src; npm install
+
+# Bundle app source
+COPY . /src
+WORKDIR /src
+
+CMD ["node", "src/receiver.js"]
