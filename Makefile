@@ -1,34 +1,33 @@
 .PHONY: test
-all: stop build run
+all: stop build start
 
 build:
 	docker-compose build
 
-run-rabbitmq:
+start-rabbitmq:
 	docker-compose --x-networking up -d rabbitmq
 
-run-mongodb:
+start-mongodb:
 	docker-compose --x-networking up -d mongodb
 
-run-receiver:
+start-receiver:
 	docker-compose --x-networking up -d receiver
 
-run-sender1:
+start-sender1:
 	docker-compose --x-networking up -d sender1
 
-run-sender2:
+start-sender2:
 	docker-compose --x-networking up -d sender2
 
 sleep:
 	sleep 10
 
-run: run-rabbitmq run-mongodb sleep run-receiver run-sender1 run-sender2
+start: start-rabbitmq start-mongodb sleep start-receiver start-sender1 start-sender2
 		@echo "All services up!"
 
 stop-sender1:
 	docker-compose stop sender1
 	docker-compose rm -f sender1
-	docker rmi rabbitmqtest_sender1 || true
 
 stop-sender2:
 	docker-compose stop sender2
@@ -48,7 +47,9 @@ stop-rabbitmq:
 
 stop: stop-sender1 stop-sender2 stop-receiver stop-mongodb stop-rabbitmq
 
-restart-sender1: stop-sender1 run-sender1
+restart-sender1: stop-sender1
+	docker rmi rabbitmqtest_sender1 || true
+	docker-compose --x-networking up -d sender1
 	docker-compose logs sender1
 
 logs:
