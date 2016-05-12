@@ -7,7 +7,7 @@ app.get('/', function (req, res) {
 });
 
 var amqp = require('amqplib/callback_api');
-var mqhost = 'amqp://rabbitmqtest_rabbitmq_1';
+var mqhost = 'amqp://rabbitmq';
 // First connect
 amqp.connect(mqhost, function(err, conn) {
     console.log('connected to amqp at ' + mqhost);

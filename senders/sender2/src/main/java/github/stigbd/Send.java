@@ -22,7 +22,7 @@ public class Send {
     private static void setupConnection() {
         try {
             factory = new ConnectionFactory();
-            factory.setHost("rabbitmqtest_rabbitmq_1");
+            factory.setHost("rabbitmq");
             factory.setRequestedHeartbeat(60);
             connection = factory.newConnection();
             channel = connection.createChannel();
@@ -30,6 +30,7 @@ public class Send {
 
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException();
         }
     }
 
@@ -42,6 +43,7 @@ public class Send {
 
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException();
         }
     }
 

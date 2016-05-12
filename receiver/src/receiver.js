@@ -1,7 +1,7 @@
 var amqp = require('amqplib/callback_api');
 
 // Open a connection and a channel, declare the queue
-amqp.connect('amqp://rabbitmqtest_rabbitmq_1', function(err, conn) {
+amqp.connect('amqp://rabbitmq', function(err, conn) {
   conn.createChannel(function(err, ch) {
     var q = 'hello';
 

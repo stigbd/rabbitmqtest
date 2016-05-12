@@ -1,22 +1,30 @@
-rabbitmq:
-  image: rabbitmq:3-management
-  ports:
-  - "8080:15672"
-  - "5672:5672"
-mongodb:
-  image: mongo
-  ports:
-  - "27017:27017"
-sender1:
-  build: senders/sender1/.
-  ports:
-    - 8081:3000
-    - 35729:35729
-sender2:
-  build: senders/sender2/.
-  ports:
-    - 8082:8888
-receiver:
-  build: receiver/.
-  ports:
-    - 8083:8888
+version: '2'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+    - "8080:15672"
+    - "5672:5672"
+  mongodb:
+    image: mongo
+    ports:
+    - "27017:27017"
+  sender1:
+    build: senders/sender1/.
+    ports:
+      - 8081:3000
+      - 35729:35729
+    depends_on:
+      - rabbitmq
+  sender2:
+    build: senders/sender2/.
+    ports:
+      - 8082:8888
+    depends_on:
+      - rabbitmq
+  receiver:
+    build: receiver/.
+    ports:
+      - 8083:8888
+    depends_on:
+      - rabbitmq
