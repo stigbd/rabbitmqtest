@@ -11,13 +11,13 @@ start-mongodb:
 	docker-compose  up -d mongodb
 
 start-receiver:
-	docker-compose  up -d receiver
+	docker-compose  up -d  --build receiver
 
 start-sender1:
-	docker-compose  up -d sender1
+	docker-compose  up -d  --build sender1
 
 start-sender2:
-	docker-compose  up -d sender2
+	docker-compose  up -d --build sender2
 
 sleep:
 	sleep 10
