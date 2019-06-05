@@ -40,8 +40,7 @@ stop-rabbitmq:
 	docker-compose rm -f rabbitmq
 
 stop:
-	docker-compose stop
-	docker-compose rm
+	docker-compose rm -sf
 
 restart-sender1: stop-sender1
 	docker rmi rabbitmqtest_sender1 || true
