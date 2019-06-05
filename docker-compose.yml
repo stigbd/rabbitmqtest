@@ -1,14 +1,10 @@
-version: '2'
+version: '3'
 services:
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:management
     ports:
     - "8080:15672"
     - "5672:5672"
-  mongodb:
-    image: mongo
-    ports:
-    - "27017:27017"
   sender1:
     build: senders/sender1/.
     ports:

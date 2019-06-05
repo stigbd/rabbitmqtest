@@ -7,9 +7,6 @@ build:
 start-rabbitmq:
 	docker-compose  up -d rabbitmq
 
-start-mongodb:
-	docker-compose  up -d mongodb
-
 start-receiver:
 	docker-compose  up -d  --build receiver
 
@@ -38,17 +35,13 @@ stop-receiver:
 	docker-compose stop receiver
 	docker-compose rm -f receiver
 
-stop-mongodb:
-	docker-compose stop mongodb
-	docker-compose rm -f mongodb
-
 stop-rabbitmq:
 	docker-compose stop rabbitmq
 	docker-compose rm -f rabbitmq
 
 stop:
 	docker-compose stop
-	docker-compose rm --all
+	docker-compose rm
 
 restart-sender1: stop-sender1
 	docker rmi rabbitmqtest_sender1 || true
@@ -56,7 +49,7 @@ restart-sender1: stop-sender1
 	docker-compose logs sender1
 
 logs:
-	docker-compose logs
+	docker-compose logs -f
 
 push:
 	@echo "======= PUSHING CONTAINER ======\n"
