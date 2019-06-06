@@ -1,1 +1,1 @@
--   [ ] Use a wrapper around amqplib, e.g. <https://github.com/arobson/rabbot/>
+-   [x] Use a wrapper around amqplib, e.g. <https://github.com/arobson/rabbot/>
