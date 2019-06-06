@@ -7,10 +7,17 @@ import com.rabbitmq.client.ConnectionFactory;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.Map;
+import java.util.HashMap;
+import org.json.JSONObject;
 
 public class Send {
 
-    private final static String QUEUE_NAME = "hello";
+    private final static String QUEUE_NAME = "worker.queue";
+    private final static String EXCHANGE_NAME = "worker.exchange";
+    private final static String DEAD_LETTER_NAME = "deadLetter.queue";
+    private final static String DEAD_LETTER_EXCHANGE_NAME = "deadLetter.exchange";
+    private final static String ROUTING_KEY = "email";
     private static int COUNTER = 0;
     private static Connection connection;
     private static Channel channel;
@@ -22,7 +29,15 @@ public class Send {
             factory.setRequestedHeartbeat(60);
             connection = factory.newConnection();
             channel = connection.createChannel();
-            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+            Map<String, Object> args = new HashMap<String, Object>();
+            args.put("x-dead-letter-exchange", DEAD_LETTER_EXCHANGE_NAME);
+            channel.exchangeDeclare(EXCHANGE_NAME, "direct", true);
+            channel.queueDeclare(QUEUE_NAME, true, false, false, args);
+            channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, ROUTING_KEY);
+            // Declaring deadletterQueue
+            channel.exchangeDeclare(DEAD_LETTER_EXCHANGE_NAME, "fanout", true);
+            channel.queueDeclare(DEAD_LETTER_NAME, true, false, false, null);
+            channel.queueBind(DEAD_LETTER_NAME, DEAD_LETTER_EXCHANGE_NAME, ROUTING_KEY);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -34,8 +49,11 @@ public class Send {
         ++COUNTER;
         try {
             String message = "ID: " + COUNTER + " -- Hello World, from java!";
-            channel.basicPublish("", QUEUE_NAME, null, message.getBytes("UTF-8"));
-            System.out.println(" [x] Sent '" + message + "'");
+            JSONObject payload = new JSONObject();
+            payload.put("msg", message);
+            payload.put("dataOK", true);
+            channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY, true, false, null, payload.toString().getBytes());
+            System.out.println(" [x] Sent '" + payload.toString() + "'");
 
         } catch (Exception e) {
             e.printStackTrace();

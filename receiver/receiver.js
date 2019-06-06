@@ -56,14 +56,13 @@ var config = {
 
 var handleMessage = function(payload) {
 
-  var body = JSON.stringify(payload.body, null, 2);
   if (payload.body.dataOK) {
     // if the data in the payload is good, lets delete the message from the queue
-    console.log('payload received: ' + body);
+    console.log('payload received: ' + payload.body.msg);
     payload.ack();
   } else {
     // the data is not good, lets move the message to the dead-letter queue
-    console.log('rejecting message: ' + body);
+    console.log('rejecting message: ' + payload.body.msg);
     payload.reject();
   }
 

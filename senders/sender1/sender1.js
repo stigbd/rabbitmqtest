@@ -78,7 +78,7 @@ app.post('/', function(req, res){
   payload.body = { msg: message, dataOK: true}
   rabbit.publish(config.exchanges[0].name, payload, config.connection.name)
   .then( function () {
-    console.log(" [x] Sent " + payload.body.msg);
+    console.log(" [x] Sent " + JSON.stringify(payload));
   })
   .catch( function(err) {
     console.log(err);
