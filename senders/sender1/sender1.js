@@ -71,8 +71,8 @@ rabbit
 app.use(bodyParser.json());
 
 app.post('/', function(req, res){
-  var message = JSON.stringify(req.body, null, 2);
-  console.log(" [x] received " + message );
+  var message = JSON.stringify(req.body);
+  console.log(" [x] received POST with body: " + message );
   var payload = {};
   payload.routingKey = 'email';
   payload.body = { msg: message, dataOK: true}
