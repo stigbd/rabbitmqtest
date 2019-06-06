@@ -9,4 +9,4 @@ RUN cd /src; npm install
 COPY . /src
 WORKDIR /src
 
-CMD ["node", "app.js"]
+CMD ["node", "sender1.js"]

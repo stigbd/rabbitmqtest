@@ -10,4 +10,4 @@ RUN cd /src; npm install
 COPY . /src
 WORKDIR /src
 
-CMD ["node", "src/receiver.js"]
+CMD ["node", "receiver.js"]

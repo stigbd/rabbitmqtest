@@ -12,10 +12,5 @@ test:
 run:
 	docker run -it --rm --name sender1 sender1
 
-run-old:
-	while :; do node src/send.js; sleep 1; done
-stop:
-
-
 clean:
 	@echo "Cleaning"
